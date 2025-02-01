@@ -1,3 +1,8 @@
+/*
+ * yHook
+ * Copyright (c) aceinet
+ * License: GPL-2.0
+ */
 #pragma once
 #include <stddef.h>
 

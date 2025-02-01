@@ -1,3 +1,8 @@
+/*
+ * yHook
+ * Copyright (c) aceinet
+ * License: GPL-2.0
+ */
 #include <stdio.h>
 #ifndef _WIN32
 #include "yhook.h"
@@ -19,7 +24,7 @@ void dostuffH(Test *thiz) {
 }
 
 int main() {
-  hook = yHookInstall((void*)(&Test::dostuff), (yaddr_t)dostuffH);
+  hook = yHookInstall((void *)(&Test::dostuff), (yaddr_t)dostuffH);
   yHookEnable(hook);
 
   Test x = Test();
@@ -27,6 +32,7 @@ int main() {
 }
 #else
 int main() {
-	printf("second example is not available because of stupid msvc compiler that doesn't like casting functions :(");
+  printf("second example is not available because of stupid msvc compiler that "
+         "doesn't like casting functions :(");
 }
 #endif
