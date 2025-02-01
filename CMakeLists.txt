@@ -4,5 +4,8 @@ include_directories("include")
 
 add_library("yhook" "src/yhook.c")
 
-add_executable("yhook_test" "src/test.c")
-target_link_libraries("yhook_test" "yhook")
+add_executable("yhook_example1" "src/example1.c")
+target_link_libraries("yhook_example1" "yhook")
+
+add_executable("yhook_example2" "src/example2.cpp")
+target_link_libraries("yhook_example2" "yhook")
