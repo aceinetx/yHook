@@ -7,8 +7,10 @@
 #define JMP_SIZE 4 + sizeof(void *)
 #elif defined(YHOOK_X86)
 #define JMP_SIZE 3 + sizeof(void *)
+#elif defined(YHOOK_ARM)
+#define JMP_SIZE 8 + sizeof(void *)
 #else
-#error "Neither of those are defined: YHOOK_X86 | YHOOK_64"
+#error "Neither of those are defined: YHOOK_X86 | YHOOK_64 | YHOOK_ARM"
 #endif
 
 typedef void *yaddr_t;

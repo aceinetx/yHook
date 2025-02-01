@@ -44,6 +44,12 @@ yHook_t yHookInstall(yaddr_t from, yaddr_t to) {
   memcpy(hook.hookCode + 1 + sizeof(yaddr_t), "\xff\xe0", 2);
 #endif
 
+#ifdef YHOOK_ARM
+  memcpy(hook.hookCode, "\xe5\x1f\x00\x00", 4);
+  memcpy(hook.hookCode + 4, "\xe1\x2f\xff\x10", 4);
+  memcpy(hook.hookCode + 8, &hook.to, sizeof(yaddr_t));
+#endif
+
   return hook;
 }
 
