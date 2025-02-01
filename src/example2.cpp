@@ -1,5 +1,7 @@
-#include "yhook.h"
 #include <stdio.h>
+#ifndef _WIN32
+#include "yhook.h"
+#include <string.h>
 
 yHook_t hook;
 
@@ -17,9 +19,14 @@ void dostuffH(Test *thiz) {
 }
 
 int main() {
-  hook = yHookInstall((yaddr_t)(&Test::dostuff), (yaddr_t)dostuffH);
+  hook = yHookInstall((void*)(&Test::dostuff), (yaddr_t)dostuffH);
   yHookEnable(hook);
 
   Test x = Test();
   x.dostuff();
 }
+#else
+int main() {
+	printf("second example is not available because of stupid msvc compiler that doesn't like casting functions :(");
+}
+#endif

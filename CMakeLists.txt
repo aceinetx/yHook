@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.20)
 project(yhook)
 include_directories("include")
 
+set(CMAKE_CXX_STANDARD 11)
+
 add_library("yhook" "src/yhook.c")
 
 add_executable("yhook_example1" "src/example1.c")
