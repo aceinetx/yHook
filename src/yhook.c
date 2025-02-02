@@ -3,9 +3,9 @@
  * Copyright (c) aceinet
  * License: GPL-2.0
  */
-#ifndef YHOOK_ARM
 
 #include "yhook.h"
+#ifndef YHOOK_ARM
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -106,7 +106,9 @@ int yHookDisable(yHook_t hook) {
   return 0;
 }
 
-#else
+#endif
+
+#ifdef YHOOK_ARM
 #include <stdio.h>
 #include <sys/mman.h>
 #include <unistd.h>
@@ -127,7 +129,7 @@ int yHookProtect(void *address, size_t size, int prot) {
   return error;
 }
 
-attribute((naked)) void opcarm() {
+__attribute__((naked)) void opcarm() {
   asm volatile("movw r0, #0x5678\n\t" // Load lower 16 bits of address
                "movt r0, #0x1234\n\t" // Load upper 16 bits of address
                "bx   r0\n\t"          // Jump to address in r0
@@ -137,7 +139,7 @@ attribute((naked)) void opcarm() {
 void __yHookPatch(uint32_t new_addr) {
   uint8_t *code = (uint8_t *)opcarm;
 
-  prot(opcarm, 8, PROT_WRITE | PROT_EXEC | PROT_READ);
+  yHookProtect(opcarm, 8, PROT_WRITE | PROT_EXEC | PROT_READ);
 
   // Patch the MOVT instruction (lower 16 bits)
   code[4] = new_addr >> 16 & 0xff;
@@ -150,7 +152,7 @@ void __yHookPatch(uint32_t new_addr) {
   code[2] = new_addr >> 12 & 0xf;
 
   // Ensure cache coherence
-  builtin_clear_cache(code, code + 8);
+  __builtin___clear_cache(code, code + 8);
 }
 
 yHook_t yHookInstall(void *from, void *to) {
@@ -164,16 +166,16 @@ yHook_t yHookInstall(void *from, void *to) {
   return hook;
 }
 
-void yHookEnable(yHook_t hook) {
-  prot(hook.from, JMP_SIZE, PROT_WRITE | PROT_EXEC | PROT_READ);
+int yHookEnable(yHook_t hook) {
+  yHookProtect(hook.from, JMP_SIZE, PROT_WRITE | PROT_EXEC | PROT_READ);
 
-  yHookPatch((uint32_t)hook.to);
+  __yHookPatch((uint32_t)hook.to);
   memcpy(hook.from, opcarm, JMP_SIZE);
   __builtin___clear_cache(hook.from, hook.from + JMP_SIZE);
 }
 
-void yHookDisable(yHook_t hook) {
-  prot(hook.from, JMP_SIZE, PROT_WRITE | PROT_EXEC | PROT_READ);
+int yHookDisable(yHook_t hook) {
+  yHookProtect(hook.from, JMP_SIZE, PROT_WRITE | PROT_EXEC | PROT_READ);
 
   memcpy(hook.from, hook.originalCode, JMP_SIZE);
   __builtin___clear_cache(hook.from, hook.from + JMP_SIZE);
