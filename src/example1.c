@@ -3,8 +3,8 @@
  * Copyright (c) aceinet
  * License: GPL-2.0
  */
-#include "yhook.h"
 #include <stdio.h>
+#include <yhook.h>
 
 yHook_t hook;
 yHook_t hook2;

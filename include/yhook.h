@@ -6,7 +6,7 @@
 #pragma once
 #include <stddef.h>
 
-#define YHOOK_ARM
+#define YHOOK_X64
 
 #define yHookTrampoline(hook, function, ...)                                   \
   yHookDisable(hook);                                                          \

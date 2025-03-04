@@ -4,7 +4,7 @@
  * License: GPL-2.0
  */
 
-#include "yhook.h"
+#include <yhook.h>
 #ifndef YHOOK_ARM
 #include <stdbool.h>
 #include <stdint.h>

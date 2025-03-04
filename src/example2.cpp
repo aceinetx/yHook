@@ -5,8 +5,8 @@
  */
 #include <stdio.h>
 #ifndef _WIN32
-#include "yhook.h"
 #include <string.h>
+#include <yhook.h>
 
 yHook_t hook;
 
